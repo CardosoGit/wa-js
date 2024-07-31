@@ -224,6 +224,14 @@ exportModule(
 exportModule(
   exports,
   {
+    LabelStore: 'LabelCollection',
+  },
+  (m) => m.LabelCollection
+);
+
+exportModule(
+  exports,
+  {
     StatusV3Store: ['StatusV3Collection', 'StatusCollection'],
   },
   (m) => m.StatusV3CollectionImpl || m.StatusCollection
