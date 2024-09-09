@@ -1,9 +1,9 @@
-## 3.8.3 (2024-08-16)
+## 3.10.1 (2024-09-09)
 
 
 ### Bug Fixes
 
-* Mantain compatibility to 2.3000.10155x ([7cc2025](https://github.com/wppconnect-team/wa-js/commit/7cc20255e33f97d58687d456c9acac895f93f357))
+* Fixed buttons for non beta user ([fbbf094](https://github.com/wppconnect-team/wa-js/commit/fbbf0948c93cb9ec19ac8a1c85f24c44d94824a5))
 
 
 
