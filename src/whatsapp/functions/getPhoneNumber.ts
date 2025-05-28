@@ -1,5 +1,5 @@
 /*!
- * Copyright 2025 WPPConnect Team
+ * Copyright 2024 WPPConnect Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 import { exportModule } from '../exportModule';
 import { Wid } from '../misc';
-import { ChatModel } from '../models';
 
 /**
- * @whatsapp WAWebChatGetExistingBridge >= 2.3000.0
+ * @whatsapp WAWebApiContact
  */
-export declare function getExisting(chatId: Wid): Promise<ChatModel | null>;
+export declare function getPhoneNumber(wid: Wid): any;
 
 exportModule(
   exports,
   {
-    getExisting: 'getExisting',
+    getPhoneNumber: 'getPhoneNumber',
   },
-  (m) => m.getExisting
+  (m) => m.getPhoneNumber
 );

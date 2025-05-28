@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-import { WPPError } from '../util';
 import * as webpack from '../webpack';
-import { ChatModel, functions, WidFactory } from '../whatsapp';
+import { ChatModel, ContactStore, functions } from '../whatsapp';
 import { wrapModuleFunction } from '../whatsapp/exportModule';
 import {
   createChat,
-  findOrCreateLatestChat,
-  getChatRecordByAccountLid,
-  getEnforceCurrentLid,
+  createChatRecord,
+  findChat,
   getExisting,
   isUnreadTypeMsg,
   mediaTypeFromProtobuf,
-  selectChatForOneOnOneMessage,
   typeAttributeFromProtobuf,
 } from '../whatsapp/functions';
 
@@ -89,84 +86,42 @@ function applyPatch() {
     return func(...args);
   });
 
-  /**
-   * Patch for fix error on try send message to lids
-   */
-  wrapModuleFunction(findOrCreateLatestChat, async (func, ...args) => {
-    const type = args[1];
-    const chatId = args[0];
-    let chatParams: any = { chatId: args[0] };
-    const context = args[1];
-    const options = (args as any)[2];
+  wrapModuleFunction(createChatRecord, async (func, ...args) => {
+    const maxAttempts = 5;
+    let delay = 1000;
 
-    if (chatId.isLid()) {
-      const lid = getEnforceCurrentLid(chatId);
-      chatParams = await selectChatForOneOnOneMessage({ lid });
-    }
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        return await func(...args);
+      } catch (err) {
+        if (attempt === maxAttempts) {
+          throw err;
+        }
 
-    const { forceUsync, signal, nextPrivacyMode } = options ?? ({} as any);
-
-    if (signal?.aborted) {
-      throw new WPPError('signal_abort_error', 'Signal aborted');
-    }
-
-    const existingChat = await getExisting(chatParams.chatId);
-    if (existingChat) {
-      if (
-        type == 'forwardSelectedModals' ||
-        type == 'newChatFlow' ||
-        type == 'chatInfoTopCard'
-      ) {
-        return { chat: existingChat, created: false };
-      } else {
-        return existingChat;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        delay *= 2;
       }
     }
-
-    const createChatParams: {
-      createdLocally: boolean;
-      notSpam?: boolean;
-      lidOriginType?: any;
-    } = {
-      createdLocally: true,
-      lidOriginType: 'general',
-    };
-    await createChat(chatParams, context, createChatParams, {
-      forceUsync,
-      nextPrivacyMode,
-    });
-
-    const newChat = await getExisting(chatParams.chatId);
-    if (!newChat) {
-      throw new Error('findChat: new chat not found');
-    }
-
-    return newChat;
   });
 
-  wrapModuleFunction(selectChatForOneOnOneMessage, async (func, ...args) => {
-    const accountLid = args[0];
-    const chatRecords = await getChatRecordByAccountLid(accountLid);
-
-    if (chatRecords.length > 1) {
-      throw new WPPError(
-        'selectChatForOneOnOneMessageAfterMigration',
-        'selectChatForOneOnOneMessageAfterMigration: found multiple chats for unique index account_lid'
+  wrapModuleFunction(findChat, async (func, ...args) => {
+    const [chatId] = args;
+    const contact = ContactStore.get(chatId);
+    const existingChat = await getExisting(chatId);
+    if (!existingChat && contact) {
+      const chatParams: any = { chatId };
+      await createChat(
+        chatParams,
+        'createChat',
+        {
+          createdLocally: true,
+          lidOriginType: 'general',
+        },
+        {}
       );
+      return await func(...args)!;
     }
-
-    if (chatRecords.length === 1) {
-      const chatId = chatRecords[0].id;
-      return {
-        accountLid,
-        chatId: WidFactory.toUserWid(WidFactory.createWid(chatId)),
-      };
-    }
-
-    return {
-      accountLid: accountLid.lid,
-      chatId: accountLid.lid,
-    };
+    return await func(...args);
   });
 }
 
