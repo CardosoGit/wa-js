@@ -34,11 +34,21 @@ export declare namespace WidFactory {
 
   function isWidlike(wid: any): wid is Wid;
 
+  // @deprecated
   function toChatWid(wid: Wid): Wid;
 
+  // @deprecated
   function toUserWid(wid: Wid): Wid;
 
+  function toGroupWid(wid: Wid): Wid;
+
   function userJidToUserWid(wid: string): Wid;
+
+  function toUserLidOrThrow(wid: Wid): Wid;
+
+  function toUserWidOrThrow(wid: Wid): Wid;
+
+  function createWid(wid: Wid): Wid;
 }
 
 exportModule(exports, 'WidFactory', (m) => m.createWid);
