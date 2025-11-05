@@ -17,31 +17,23 @@
 import { exportModule } from '../exportModule';
 
 /**
- * @whatsapp WAWebSaveContactAction >= 2.3000.0
+ * Get upload limit for media files based on media type and status origin
+ * @whatsapp WAWebMediaGatingUtils
+ * @param mediaType Media type ('audio', 'video', 'image', 'document', 'sticker', 'sticker-pack')
+ * @param fileOrigin File origin for status uploads (e.g., 'STATUS_TAB_CAMERA_PHOTO_LIBRARY')
+ * @param isVcardOverMmsDocument Whether this is a vCard over MMS document
+ * @returns Upload limit in bytes
  */
-/**
- * @param user 5521980809090
- * @param userToDelete 5521980809090
- * @param e_fullName Contact Full Name
- * @param f_firstName Contact First Name
- * @param name Contact Name
- * @param surname Contact Surname
- * @param syncToAddressbook Sync to Addressbook boolean
- */
-export declare function saveContactAction(
-  userToCreate: string,
-  userToDelete: string | null,
-  e_fullName?: any,
-  f_firstName?: any,
-  name?: any,
-  surname?: any,
-  syncToAddressbook?: boolean
-): Promise<undefined>;
+export declare function getUploadLimit(
+  mediaType: string,
+  fileOrigin?: string | null,
+  isVcardOverMmsDocument?: boolean
+): number;
 
 exportModule(
   exports,
   {
-    saveContactAction: 'saveContactAction',
+    getUploadLimit: ['getUploadLimit'],
   },
-  (m) => m.saveContactAction
+  (m) => m.getUploadLimit && typeof m.getUploadLimit === 'function'
 );
