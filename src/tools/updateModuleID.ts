@@ -72,7 +72,7 @@ async function start() {
         let module: any;
         try {
           module = submodules[name];
-        } catch (error) {}
+        } catch (_error) {}
 
         const resultName = dir ? `${dir}.${name}` : name;
 
@@ -86,6 +86,9 @@ async function start() {
   const version = await page
     .evaluate(() => (window as any).Debug.VERSION)
     .catch(() => null);
+
+  // if any pending request is hanging we unroute them to avoid errors, before browser close
+  await page.unrouteAll({ behavior: 'ignoreErrors' });
 
   await browser.close();
 
@@ -101,12 +104,12 @@ async function start() {
    * This will not directly affect the function call, it continues to work normally.
    */
   const ignoreFailModules: string[] = [
-    'functions.revokeStatus',
-    'functions.setPushname',
-    'functions.editCollection',
-    'functions.deleteCollection',
     'functions.createCollection',
+    'functions.deleteCollection',
+    'functions.editCollection',
     'functions.forwardMessages',
+    'functions.setPushname',
+    'functions.revokeStatus',
   ];
 
   for (const moduleName of Object.keys(result)) {
