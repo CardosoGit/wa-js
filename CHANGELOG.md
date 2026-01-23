@@ -1,9 +1,9 @@
-## 3.19.7 (2026-01-18)
+# 3.20.0 (2026-01-21)
 
 
-### Bug Fixes
+### Features
 
-* update sendSeen call to ensure immediate UI update for markIsRead ([#3211](https://github.com/wppconnect-team/wa-js/issues/3211)) ([503c612](https://github.com/wppconnect-team/wa-js/commit/503c612ae75368da904a32bab5980bbacd5a010a))
+* Ability to manage whatsapp theme  ([#3233](https://github.com/wppconnect-team/wa-js/issues/3233)) ([9530a49](https://github.com/wppconnect-team/wa-js/commit/9530a497db49704215668fa068b5a0c1fe06b9f8))
 
 
 
