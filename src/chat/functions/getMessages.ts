@@ -235,11 +235,17 @@ export async function getMessages(
     if (useLegacyAPI) {
       msgs = await msgFindQuery(direction, params);
     } else {
-      msgs = await msgFindByDirection({
+      const result = await msgFindByDirection({
         anchor: newAPIAnchor!,
         count,
         direction,
       });
+
+      if (Array.isArray(result)) {
+        msgs.push(...result);
+      } else if (result?.messages) {
+        msgs.push(...result.messages);
+      }
     }
   }
 
