@@ -235,8 +235,12 @@ export async function getMessages(
     if (useLegacyAPI) {
       msgs = await msgFindQuery(direction, params);
     } else {
+      if (!newAPIAnchor) {
+        return [];
+      }
+
       const result = await msgFindByDirection({
-        anchor: newAPIAnchor!,
+        anchor: newAPIAnchor,
         count,
         direction,
       });
@@ -308,6 +312,14 @@ export async function getMessages(
       // Silently fail if call messages can't be retrieved
       console.warn('Could not retrieve call messages:', e);
     }
+  }
+
+  // Keys created before the MsgKey patch ran (e.g. the appended
+  // lastReceivedKey message from MsgStore) still cache the serialized value
+  // in a minified property; reading _serialized migrates them in place
+  // (see whatsapp/misc/MsgKey.ts).
+  for (const msg of msgs) {
+    void msg.id?._serialized;
   }
 
   return msgs;

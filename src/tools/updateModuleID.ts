@@ -104,6 +104,8 @@ async function start() {
    * This will not directly affect the function call, it continues to work normally.
    */
   const ignoreFailModules: string[] = [
+    'enums.StreamInfo', // Plain TypeScript enum, not a webpack module
+    'enums.StreamMode', // Plain TypeScript enum, not a webpack module
     'functions.createCollection',
     'functions.deleteCollection',
     'functions.editCollection',
@@ -122,6 +124,8 @@ async function start() {
     'functions.msgFindMedia', // added in WA version 2.3000.1034162388, but not available in older versions
     'functions.msgFindSearch', // added in WA version 2.3000.1034162388, but not available in older versions
     'functions.msgFindStarred', // added in WA version 2.3000.1034162388, but not available in older versions
+    'CartItemCollection', // WAWebCartItemCollection removed from WA ~= 2.3000.1039092809
+    'functions.subscribeGroupPresence', // added in WAWebContactPresenceBridge >= ~2.3000.1039447205
   ];
 
   for (const moduleName of Object.keys(result)) {

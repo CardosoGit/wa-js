@@ -26,6 +26,7 @@ interface CreateLidPnMappingsParams {
   mappings: LidPnMapping[];
   flushImmediately: boolean;
   learningSource: string;
+  identityChangeHandlingEnabled?: boolean;
 }
 
 /**
@@ -41,5 +42,7 @@ exportModule(
   {
     createLidPnMappings: 'createLidPnMappings',
   },
-  (m) => m.createLidPnMappings
+  // WAWebDBCreateLidPnMappings (wrapper) & WAWebDBCreateLidPnMappingsCommon (raw)
+  // both have the same function, we need WAWebDBCreateLidPnMappings that handles bulkUpdatePhoneNumberJids and handleNewIdentity injection automatically
+  (m, id) => id === 'WAWebDBCreateLidPnMappings'
 );

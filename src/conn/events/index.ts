@@ -16,6 +16,7 @@
 
 import './registerAuthCodeChangeEvent';
 import './registerAuthenticatedEvent';
+import './registerBackendEventBusEvents';
 import './registerLogoutEvent';
 import './registerLogoutReasonEvent';
 import './registerMainInit';
@@ -25,3 +26,4 @@ import './registerNeedsUpdateEvent';
 import './registerOnlineEvent';
 import './registerQRCodeIdleEvent';
 import './registerRequireAuthEvent';
+import './registerStreamEvent';

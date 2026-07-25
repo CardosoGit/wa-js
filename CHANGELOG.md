@@ -1,9 +1,3 @@
-## 3.22.1 (2026-02-28)
+## <small>4.4.2 (2026-07-24)</small>
 
-
-### Bug Fixes
-
-* getMessages (msgs.push is not a function) ([#3364](https://github.com/wppconnect-team/wa-js/issues/3364)) ([bdd2224](https://github.com/wppconnect-team/wa-js/commit/bdd222400e594e98b74cadc06a3a21eef3f2ecd8))
-
-
-
+* fix: protobuf named params when sending messages (#3498) ([be60fe152db53df969510d69dcdd253f9dafe354](https://github.com/wppconnect-team/wa-js/commit/be60fe152db53df969510d69dcdd253f9dafe354)), closes [#3498](https://github.com/wppconnect-team/wa-js/issues/3498)
